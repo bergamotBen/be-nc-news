@@ -32,9 +32,3 @@ describe("GET /api/topics", () => {
       });
   });
 });
-
-/* tests
-
-the array should contain objects with the slug and the description
-
-*/
