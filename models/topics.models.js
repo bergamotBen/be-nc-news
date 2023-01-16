@@ -4,4 +4,6 @@ const readTopics = () => {
   return db.query(`SELECT * FROM topics;`);
 };
 
-module.exports = { readTopics };
+const readArticles = () => {};
+
+module.exports = { readTopics, readArticles };
