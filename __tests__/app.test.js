@@ -12,22 +12,13 @@ afterAll(() => {
   db.end();
 });
 
-// describe("get /api/treasures", () => {
-//     it("status 200 and responses with all treasures", () => {
-//       return request(app)
-//         .get("/api/treasures")
-//         .expect(200)
-//         .then(({ body }) => {
-//           expect(body).toBeInstanceOf(Array);
-//         });
-
 describe("GET /api/topics", () => {
   it("returns a status 200 and responds with all topics.", () => {
     return request(app)
       .get("/api/topics")
       .expect(200)
       .then(({ body }) => {
-        expect(body).toBeInstanceOf(Array);
+        expect(body.topics).toBeInstanceOf(Array);
       });
   });
   it("returns objects with slug and description keys.", () => {
@@ -35,8 +26,9 @@ describe("GET /api/topics", () => {
       .get("/api/topics")
       .expect(200)
       .then(({ body }) => {
-        expect(body[0]).toHaveProperty("slug");
-        expect(body[0]).toHaveProperty("description");
+        expect(body.topics.length).not.toBe(0);
+        expect(body.topics[0]).toHaveProperty("slug");
+        expect(body.topics[0]).toHaveProperty("description");
       });
   });
 });
