@@ -32,3 +32,15 @@ describe("GET /api/topics", () => {
       });
   });
 });
+
+describe.only("GET /api/articles/:article_id", () => {
+  it("returns 200 and the requested article", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toBeInstanceOf(Array);
+        //this test is incomplete//
+      });
+  });
+});

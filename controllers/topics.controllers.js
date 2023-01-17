@@ -6,4 +6,8 @@ const getTopics = (req, res) => {
   });
 };
 
-module.exports = { getTopics };
+const getArticle = (req, res) => {
+  res.sendStatus(200);
+};
+
+module.exports = { getTopics, getArticle };
