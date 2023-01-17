@@ -1,15 +1,23 @@
 const { readTopics, readArticles } = require("../models/models");
 
 const getTopics = (req, res) => {
-  return readTopics().then((rows) => {
-    res.status(200).send({ topics: rows });
-  });
+  readTopics()
+    .then((rows) => {
+      res.status(200).send({ topics: rows });
+    })
+    .catch((err) => {
+      res.status(err.status).send({ msg: err.message });
+    });
 };
 
 const getArticles = (req, res) => {
-  return readArticles().then((rows) => {
-    res.status(200).send({ articles: rows });
-  });
+  readArticles()
+    .then((rows) => {
+      res.status(200).send({ articles: rows });
+    })
+    .catch((err) => {
+      res.status(err.status).send({ msg: err.message });
+    });
 };
 
 module.exports = { getTopics, getArticles };
