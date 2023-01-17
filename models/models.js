@@ -19,5 +19,15 @@ const readArticles = () => {
       return articles.rows;
     });
 };
-
-module.exports = { readTopics, readArticles };
+const readCommentsByArticleId = (article_id) => {
+  return db
+    .query(
+      `SELECT * FROM comments
+    WHERE article_id=$1`,
+      [article_id.article_id]
+    )
+    .then((comments) => {
+      return comments.rows;
+    });
+};
+module.exports = { readTopics, readArticles, readCommentsByArticleId };

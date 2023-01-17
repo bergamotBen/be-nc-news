@@ -1,4 +1,8 @@
-const { readTopics, readArticles } = require("../models/models");
+const {
+  readTopics,
+  readArticles,
+  readCommentsByArticleId,
+} = require("../models/models");
 
 const getTopics = (req, res) => {
   readTopics()
@@ -20,4 +24,11 @@ const getArticles = (req, res) => {
     });
 };
 
-module.exports = { getTopics, getArticles };
+const getCommentsByArticleId = (req, res, next) => {
+  const article_id = req.params;
+  readCommentsByArticleId(article_id).then((comments) => {
+    res.status(200).send({ comments });
+  });
+};
+
+module.exports = { getTopics, getArticles, getCommentsByArticleId };
