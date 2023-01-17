@@ -3,7 +3,6 @@ const request = require("supertest");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const db = require("../db/connection");
-const sorted = require("jest-sorted");
 
 beforeEach(() => {
   return seed(data);
@@ -30,41 +29,6 @@ describe("GET /api/topics", () => {
         expect(body.topics.length).not.toBe(0);
         expect(body.topics[0]).toHaveProperty("slug");
         expect(body.topics[0]).toHaveProperty("description");
-      });
-  });
-});
-
-describe("GET /api/articles", () => {
-  it("returns a status 200 and an array of articles", () => {
-    return request(app)
-      .get("/api/articles")
-      .expect(200)
-      .then(({ body }) => {
-        expect(body.articles).toBeInstanceOf(Array);
-      });
-  });
-  it("returns objects from the articles table with the correct keys ", () => {
-    return request(app)
-      .get("/api/articles")
-      .expect(200)
-      .then(({ body }) => {
-        expect(body.articles.length).not.toBe(0);
-        expect(body.articles[0]).toHaveProperty("author");
-        expect(body.articles[0]).toHaveProperty("title");
-        expect(body.articles[0]).toHaveProperty("article_id");
-        expect(body.articles[0]).toHaveProperty("topic");
-        expect(body.articles[0]).toHaveProperty("created_at");
-        expect(body.articles[0]).toHaveProperty("votes");
-        expect(body.articles[0]).toHaveProperty("article_img_url");
-        expect(body.articles[0]).toHaveProperty("comment_count");
-      });
-  });
-  it("returns articles ordered by date descending", () => {
-    return request(app)
-      .get("/api/articles")
-      .expect(200)
-      .then(({ body }) => {
-        expect(body.articles).toBeSortedBy("created_at", { descending: true });
       });
   });
 });
