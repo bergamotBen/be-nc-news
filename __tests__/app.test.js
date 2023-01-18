@@ -214,7 +214,7 @@ describe("POST /api/articles/:article_id/comments", () => {
       .send({ username: "butter_bridge", body: "an inspirational read" })
       .expect(404)
       .then(({ body }) => {
-        expect(body.message).toBe("Not found");
+        expect(body.message).toBe("not found");
       });
   });
 });

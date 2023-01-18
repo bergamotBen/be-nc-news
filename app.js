@@ -4,6 +4,7 @@ const {
   getArticles,
   getArticle,
   postComment,
+  getCommentsByArticleId,
 } = require("./controllers/controllers");
 const app = express();
 
