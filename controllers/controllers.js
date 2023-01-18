@@ -4,6 +4,7 @@ const {
   readArticle,
   createComment,
   readCommentsByArticleId,
+  updateVotes,
 } = require("../models/models");
 
 const getTopics = (req, res) => {
@@ -15,7 +16,6 @@ const getTopics = (req, res) => {
       res.status(err.status).send({ msg: err.message });
     });
 };
-
 const getArticles = (req, res) => {
   readArticles()
     .then((rows) => {
@@ -25,7 +25,6 @@ const getArticles = (req, res) => {
       res.status(err.status).send({ msg: err.message });
     });
 };
-
 const getArticle = (req, res, next) => {
   const articleId = req.params;
 
@@ -62,10 +61,14 @@ const postComment = (req, res, next) => {
       next(err);
     });
 };
+const patchVotes = (req, res) => {
+  updateVotes();
+};
 module.exports = {
   getTopics,
   getArticles,
   getArticle,
   postComment,
   getCommentsByArticleId,
+  patchVotes,
 };
