@@ -12,6 +12,7 @@ app.use(express.json());
 app.get("/api/topics", getTopics);
 app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id", getArticle);
+app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
 app.use((err, req, res, next) => {
   if (err.status === 400) {
@@ -23,8 +24,6 @@ app.use((err, req, res, next) => {
 app.use((req, res, next) => {
   res.status(404).send({ message: "Not found." });
 });
-
-app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
 app.use((err, req, res, next) => {
   if (err.code === "22P02") {

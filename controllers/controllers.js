@@ -1,4 +1,3 @@
-const { readTopics, readArticles, readArticle } = require("../models/models");
 const {
   readTopics,
   readArticles,
@@ -53,4 +52,4 @@ const getCommentsByArticleId = (req, res, next) => {
     });
 };
 
-module.exports = { getTopics, getArticles, getCommentsByArticleId };
+module.exports = { getTopics, getArticles, getCommentsByArticleId, getArticle };
