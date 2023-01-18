@@ -1,12 +1,9 @@
 const express = require("express");
 const {
- 
   getTopics,
- 
   getArticles,
- ,
   getCommentsByArticleId,
-getArticle,
+  getArticle,
 } = require("./controllers/controllers");
 const app = express();
 
