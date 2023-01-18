@@ -1,3 +1,4 @@
+const { readTopics, readArticles, readArticle } = require("../models/models");
 const {
   readTopics,
   readArticles,
@@ -25,6 +26,19 @@ const getArticles = (req, res) => {
     });
 };
 
+const getArticle = (req, res, next) => {
+  const articleId = req.params;
+
+  readArticle(articleId)
+    .then((article) => {
+      res.status(200).send(article);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+module.exports = { getTopics, getArticles, getArticle };
 const getCommentsByArticleId = (req, res, next) => {
   const article_id = req.params;
   Promise.all([readCommentsByArticleId(article_id), readArticle(article_id)])

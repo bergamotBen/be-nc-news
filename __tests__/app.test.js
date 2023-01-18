@@ -81,6 +81,50 @@ describe("GET /api/articles", () => {
   });
 });
 
+describe("GET /api/articles/:article_id", () => {
+  it("returns 200 and the requested article", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toBeInstanceOf(Object);
+        expect(body.article).toHaveProperty("article_id");
+        expect(body.article).toHaveProperty("title");
+        expect(body.article).toHaveProperty("topic");
+        expect(body.article).toHaveProperty("author");
+        expect(body.article).toHaveProperty("body");
+        expect(body.article).toHaveProperty("created_at");
+        expect(body.article).toHaveProperty("votes");
+        expect(body.article).toHaveProperty("article_img_url");
+
+        expect(body.article.article_id).toBe(1);
+        expect(typeof body.article.title).toBe("string");
+        expect(typeof body.article.topic).toBe("string");
+        expect(typeof body.article.author).toBe("string");
+        expect(typeof body.article.body).toBe("string");
+        expect(typeof body.article.created_at).toBe("string");
+        expect(typeof body.article.votes).toBe("number");
+        expect(typeof body.article.article_img_url).toBe("string");
+      });
+  });
+  it("returns 400 when given an invalid :article_id", () => {
+    return request(app)
+      .get("/api/articles/article")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toBe("Bad request");
+      });
+  });
+  it("returns 404 when given a valid but nonexistent :article_id", () => {
+    return request(app)
+      .get("/api/article/123")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.message).toBe("Not found.");
+      });
+  });
+});
+
 describe("GET /api/articles/:article_id/comments", () => {
   it("returns status 200 and an object containing an array of comments with the relevant data", () => {
     return request(app)
