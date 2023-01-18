@@ -37,7 +37,19 @@ const getArticle = (req, res, next) => {
       next(err);
     });
 };
-
+const getCommentsByArticleId = (req, res, next) => {
+  const article_id = req.params;
+  Promise.all([readCommentsByArticleId(article_id), readArticle(article_id)])
+    .then((comments) => {
+      if (comments[1].article === undefined) {
+        return Promise.reject({ status: 404, msg: "uh oh" });
+      }
+      res.status(200).send({ comments: comments[0] });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
 const postComment = (req, res, next) => {
   const comment = req.body;
   const articleId = req.params;
@@ -50,10 +62,10 @@ const postComment = (req, res, next) => {
       next(err);
     });
 };
-
 module.exports = {
   getTopics,
   getArticles,
   getArticle,
   postComment,
+  getCommentsByArticleId,
 };

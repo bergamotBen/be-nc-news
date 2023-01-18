@@ -149,12 +149,12 @@ describe("GET /api/articles/:article_id/comments", () => {
         });
       });
   });
-  it("returns 400  and bad request when given an invalid :article_id", () => {
+  it("returns 400 and invalid type when given an invalid :article_id", () => {
     return request(app)
       .get("/api/articles/article1/comments")
       .expect(400)
       .then(({ body }) => {
-        expect(body.message).toBe("Bad request");
+        expect(body.message).toBe("invalid type");
       });
   });
   it("returns 404 and not found when given a valid but nonexistent path", () => {
