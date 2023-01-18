@@ -50,4 +50,10 @@ const postComment = (req, res, next) => {
       next(err);
     });
 };
-module.exports = { getTopics, getArticles, getArticle, postComment };
+
+module.exports = {
+  getTopics,
+  getArticles,
+  getArticle,
+  postComment,
+};

@@ -76,4 +76,10 @@ const createComment = (comment, articleId) => {
       return rows[0];
     });
 };
-module.exports = { readTopics, readArticles, readArticle, createComment };
+module.exports = {
+  readTopics,
+  readArticles,
+  readArticle,
+  createComment,
+  readCommentsByArticleId,
+};
