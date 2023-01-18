@@ -81,7 +81,7 @@ describe("GET /api/articles", () => {
   });
 });
 
-describe.only("GET /api/articles/:article_id/comments", () => {
+describe("GET /api/articles/:article_id/comments", () => {
   it("returns status 200 and an object containing an array of comments with the relevant data", () => {
     return request(app)
       .get("/api/articles/1/comments")

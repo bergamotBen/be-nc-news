@@ -2,6 +2,7 @@ const {
   readTopics,
   readArticles,
   readCommentsByArticleId,
+  readArticle,
 } = require("../models/models");
 
 const getTopics = (req, res) => {
@@ -26,9 +27,10 @@ const getArticles = (req, res) => {
 
 const getCommentsByArticleId = (req, res, next) => {
   const article_id = req.params;
-  readCommentsByArticleId(article_id)
+  Promise.all([readCommentsByArticleId(article_id), readArticle(article_id)])
     .then((comments) => {
-      res.status(200).send({ comments });
+      console.log(comments[1]);
+      res.status(200).send({ comments: comments[0] });
     })
     .catch((err) => {
       next(err);
