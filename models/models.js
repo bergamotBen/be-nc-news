@@ -20,26 +20,26 @@ const readArticles = () => {
     });
 };
 
+// const readArticle = (articleId) => {
+//   return db
+//     .query(
+//       `
+// SELECT * FROM articles WHERE article_id=$1`,
+//       [articleId.article_id]
+//     )
+//     .then(({ rows }) => {
+//       return { article: rows[0] };
+//     })
+//     .catch(() => {
+//       return Promise.reject({ status: 400, message: "Bad request" });
+//     });
+// };
+
 const readArticle = (articleId) => {
   return db
     .query(
       `
-SELECT * FROM articles WHERE article_id=$1`,
-      [articleId.article_id]
-    )
-    .then(({ rows }) => {
-      return { article: rows[0] };
-    })
-    .catch(() => {
-      return Promise.reject({ status: 400, message: "Bad request" });
-    });
-};
-module.exports = { readTopics, readArticles, readArticle };
-const readArticle = (articleId) => {
-  return db
-    .query(
-      `
-  SELECT * FROM articles WHERE article_id=$1`,
+    SELECT * FROM articles WHERE article_id=$1`,
       [articleId.article_id]
     )
     .then(({ rows }) => {
@@ -54,7 +54,7 @@ const readCommentsByArticleId = (article_id) => {
   return db
     .query(
       `SELECT * FROM comments
-    WHERE article_id=$1`,
+      WHERE article_id=$1`,
       [article_id.article_id]
     )
     .then((comments) => {

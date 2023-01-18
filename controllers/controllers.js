@@ -1,4 +1,3 @@
-const { readTopics, readArticles, readArticle } = require("../models/models");
 const {
   readTopics,
   readArticles,
@@ -38,7 +37,6 @@ const getArticle = (req, res, next) => {
     });
 };
 
-module.exports = { getTopics, getArticles, getArticle };
 const getCommentsByArticleId = (req, res, next) => {
   const article_id = req.params;
   Promise.all([readCommentsByArticleId(article_id), readArticle(article_id)])
@@ -53,4 +51,4 @@ const getCommentsByArticleId = (req, res, next) => {
     });
 };
 
-module.exports = { getTopics, getArticles, getCommentsByArticleId };
+module.exports = { getTopics, getArticles, getCommentsByArticleId, getArticle };
