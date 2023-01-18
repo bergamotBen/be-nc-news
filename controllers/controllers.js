@@ -1,6 +1,12 @@
 const {
   readTopics,
   readArticles,
+  readCommentsByArticleId,
+  readArticle,
+} = require("../models/models");
+const {
+  readTopics,
+  readArticles,
   readArticle,
   createComment,
 } = require("../models/models");
