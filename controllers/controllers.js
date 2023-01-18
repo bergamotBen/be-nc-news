@@ -29,7 +29,9 @@ const getCommentsByArticleId = (req, res, next) => {
   const article_id = req.params;
   Promise.all([readCommentsByArticleId(article_id), readArticle(article_id)])
     .then((comments) => {
-      console.log(comments[1]);
+      if (comments[1].article === undefined) {
+        return Promise.reject({ status: 404, msg: "uh oh" });
+      }
       res.status(200).send({ comments: comments[0] });
     })
     .catch((err) => {

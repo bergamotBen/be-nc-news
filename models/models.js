@@ -28,10 +28,10 @@ const readArticle = (articleId) => {
       [articleId.article_id]
     )
     .then(({ rows }) => {
+      if (rows === 0) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      }
       return { article: rows[0] };
-    })
-    .catch(() => {
-      return Promise.reject({ status: 400, message: "Bad request" });
     });
 };
 
@@ -44,9 +44,6 @@ const readCommentsByArticleId = (article_id) => {
     )
     .then((comments) => {
       return comments.rows;
-    })
-    .catch(() => {
-      return Promise.reject({ status: 400, message: "Bad request" });
     });
 };
 module.exports = {

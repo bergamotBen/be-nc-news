@@ -105,7 +105,7 @@ describe("GET /api/articles/:article_id/comments", () => {
         });
       });
   });
-  it("returns 400 when given an invalid :article_id", () => {
+  it("returns 400  and bad request when given an invalid :article_id", () => {
     return request(app)
       .get("/api/articles/article1/comments")
       .expect(400)
@@ -113,7 +113,12 @@ describe("GET /api/articles/:article_id/comments", () => {
         expect(body.message).toBe("Bad request");
       });
   });
-  it("returns 404 when given a valid but nonexistent path", () => {
-    return request(app).get("/api/articles/1234/comments").expect(404);
+  it("returns 404 and not found when given a valid but nonexistent path", () => {
+    return request(app)
+      .get("/api/articles/1234/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.message).toBe("Not found");
+      });
   });
 });
