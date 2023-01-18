@@ -112,7 +112,7 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/article")
       .expect(400)
       .then(({ body }) => {
-        expect(body.message).toBe("Bad request");
+        expect(body.message).toBe("invalid type");
       });
   });
   it("returns 404 when given a valid but nonexistent :article_id", () => {
@@ -214,7 +214,7 @@ describe("POST /api/articles/:article_id/comments", () => {
       .send({ username: "butter_bridge", body: "an inspirational read" })
       .expect(404)
       .then(({ body }) => {
-        expect(body.message).toBe("not found");
+        expect(body.message).toBe("Not found");
       });
   });
 });

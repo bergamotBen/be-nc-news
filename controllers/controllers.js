@@ -54,7 +54,6 @@ const postComment = (req, res, next) => {
 module.exports = {
   getTopics,
   getArticles,
-  getCommentsByArticleId,
   getArticle,
   postComment,
 };
