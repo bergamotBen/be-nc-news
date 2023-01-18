@@ -1,4 +1,10 @@
 const { readTopics, readArticles, readArticle } = require("../models/models");
+const {
+  readTopics,
+  readArticles,
+  readCommentsByArticleId,
+  readArticle,
+} = require("../models/models");
 
 const getTopics = (req, res) => {
   readTopics()
@@ -33,3 +39,18 @@ const getArticle = (req, res, next) => {
 };
 
 module.exports = { getTopics, getArticles, getArticle };
+const getCommentsByArticleId = (req, res, next) => {
+  const article_id = req.params;
+  Promise.all([readCommentsByArticleId(article_id), readArticle(article_id)])
+    .then((comments) => {
+      if (comments[1].article === undefined) {
+        return Promise.reject({ status: 404, msg: "uh oh" });
+      }
+      res.status(200).send({ comments: comments[0] });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+module.exports = { getTopics, getArticles, getCommentsByArticleId };
