@@ -115,7 +115,7 @@ describe("GET /api/articles/:article_id", () => {
         expect(body.message).toBe("Bad request");
       });
   });
-  it.only("returns 404 when given a valid but nonexistent :article_id", () => {
+  it("returns 404 when given a valid but nonexistent :article_id", () => {
     return request(app)
       .get("/api/article/123")
       .expect(404)

@@ -16,9 +16,6 @@ app.use((err, req, res, next) => {
   if (err.status === 400) {
     return res.status(err.status).send({ message: err.message });
   }
-  if (err.status === 404) {
-    return res.status(err.status).send({ message: err.message });
-  }
   next(err);
 });
 
