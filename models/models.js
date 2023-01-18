@@ -34,11 +34,12 @@ const readArticles = () => {
 //       return Promise.reject({ status: 400, message: "Bad request" });
 //     });
 // };
+
 const readArticle = (articleId) => {
   return db
     .query(
       `
-  SELECT * FROM articles WHERE article_id=$1`,
+    SELECT * FROM articles WHERE article_id=$1`,
       [articleId.article_id]
     )
     .then(({ rows }) => {
@@ -53,16 +54,26 @@ const readCommentsByArticleId = (article_id) => {
   return db
     .query(
       `SELECT * FROM comments
-    WHERE article_id=$1`,
+      WHERE article_id=$1`,
       [article_id.article_id]
     )
     .then((comments) => {
       return comments.rows;
     });
 };
-module.exports = {
-  readTopics,
-  readArticles,
-  readCommentsByArticleId,
-  readArticle,
+
+const createComment = (comment, articleId) => {
+  return db
+    .query(
+      `INSERT INTO comments
+      (body, author, article_id)
+      VALUES
+      ($1, $2, $3)
+      RETURNING body`,
+      [comment.body, comment.username, articleId.article_id]
+    )
+    .then(({ rows }) => {
+      return rows[0];
+    });
 };
+module.exports = { readTopics, readArticles, readArticle, createComment };
