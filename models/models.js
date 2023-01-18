@@ -34,4 +34,19 @@ SELECT * FROM articles WHERE article_id=$1`,
       return Promise.reject({ status: 400, message: "Bad request" });
     });
 };
-module.exports = { readTopics, readArticles, readArticle };
+
+const createComment = (comment, articleId) => {
+  return db
+    .query(
+      `INSERT INTO comments
+      (body, author, article_id)
+      VALUES
+      ($1, $2, $3)
+      RETURNING body`,
+      [comment.body, comment.username, articleId.article_id]
+    )
+    .then(({ rows }) => {
+      return rows[0];
+    });
+};
+module.exports = { readTopics, readArticles, readArticle, createComment };

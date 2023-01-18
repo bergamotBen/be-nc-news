@@ -1,4 +1,9 @@
-const { readTopics, readArticles, readArticle } = require("../models/models");
+const {
+  readTopics,
+  readArticles,
+  readArticle,
+  createComment,
+} = require("../models/models");
 
 const getTopics = (req, res) => {
   readTopics()
@@ -32,4 +37,16 @@ const getArticle = (req, res, next) => {
     });
 };
 
-module.exports = { getTopics, getArticles, getArticle };
+const postComment = (req, res, next) => {
+  const comment = req.body;
+  const articleId = req.params;
+
+  createComment(comment, articleId, next)
+    .then((body) => {
+      res.status(201).send(body);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+module.exports = { getTopics, getArticles, getArticle, postComment };

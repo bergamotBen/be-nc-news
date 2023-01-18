@@ -124,3 +124,55 @@ describe("GET /api/articles/:article_id", () => {
       });
   });
 });
+
+describe("POST /api/articles/:article_id/comments", () => {
+  it("returns a status of 201 and the comment body", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({ username: "butter_bridge", body: "an inspirational read" })
+      .expect(201)
+      .then(({ body }) => {
+        expect(body).toEqual({
+          body: "an inspirational read",
+        });
+      });
+  });
+  it("returns 400 if username key is missing", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({ body: "an inspirational read" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toBe("incomplete");
+      });
+  });
+  it("returns 400 if body key is missing", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({ username: "bergamotBen" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toBe("incomplete");
+      });
+  });
+
+  it("returns 400 given a bad article_id", () => {
+    return request(app)
+      .post("/api/articles/article/comments")
+      .send({ username: "butter_bridge", body: "an inspirational read" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toBe("invalid type");
+      });
+  });
+
+  it("returns 404 given a valid but nonexistent article_id", () => {
+    return request(app)
+      .post("/api/articles/1234/comments")
+      .send({ username: "butter_bridge", body: "an inspirational read" })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.message).toBe("not found");
+      });
+  });
+});
