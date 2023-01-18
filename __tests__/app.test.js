@@ -105,4 +105,15 @@ describe.only("GET /api/articles/:article_id/comments", () => {
         });
       });
   });
+  it("returns 400 when given an invalid :article_id", () => {
+    return request(app)
+      .get("/api/articles/article1/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toBe("Bad request");
+      });
+  });
+  it("returns 404 when given a valid but nonexistent path", () => {
+    return request(app).get("/api/articles/1234/comments").expect(404);
+  });
 });

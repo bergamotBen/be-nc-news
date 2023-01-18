@@ -28,6 +28,9 @@ const readCommentsByArticleId = (article_id) => {
     )
     .then((comments) => {
       return comments.rows;
+    })
+    .catch(() => {
+      return Promise.reject({ status: 400, message: "Bad request" });
     });
 };
 module.exports = { readTopics, readArticles, readCommentsByArticleId };
