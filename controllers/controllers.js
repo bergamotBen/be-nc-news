@@ -1,14 +1,9 @@
 const {
   readTopics,
   readArticles,
-  readCommentsByArticleId,
-  readArticle,
-} = require("../models/models");
-const {
-  readTopics,
-  readArticles,
   readArticle,
   createComment,
+  readCommentsByArticleId,
 } = require("../models/models");
 
 const getTopics = (req, res) => {
