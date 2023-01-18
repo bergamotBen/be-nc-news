@@ -20,4 +20,18 @@ const readArticles = () => {
     });
 };
 
-module.exports = { readTopics, readArticles };
+const readArticle = (articleId) => {
+  return db
+    .query(
+      `
+SELECT * FROM articles WHERE article_id=$1`,
+      [articleId.article_id]
+    )
+    .then(({ rows }) => {
+      return { article: rows[0] };
+    })
+    .catch(() => {
+      return Promise.reject({ status: 400, message: "Bad request" });
+    });
+};
+module.exports = { readTopics, readArticles, readArticle };
