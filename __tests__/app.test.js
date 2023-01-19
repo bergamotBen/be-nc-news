@@ -281,6 +281,7 @@ describe("PATCH /api/articles/:article_id", () => {
       });
   });
 });
+
 describe("GET /api/users", () => {
   it("responds with a status 200 and an object with an array of users", () => {
     return request(app)
@@ -296,6 +297,37 @@ describe("GET /api/users", () => {
           expect(typeof user.name).toBe("string");
           expect(typeof user.avatar_url).toBe("string");
         });
+      });
+  });
+});
+
+describe("DELETE /api/comments/:comment_id", () => {
+  it("return a status of 204 and no content in db ", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then(() => {
+        return db
+          .query(`SELECT * FROM comments WHERE comment_id = 1;`)
+          .then((result) => {
+            expect(result.rows).toHaveLength(0);
+          });
+      });
+  });
+  it("returns 400 and rejects invalid types", () => {
+    return request(app)
+      .delete("/api/comments/comment")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toBe("invalid type");
+      });
+  });
+  it("returns 404 and not found for valid but nonexistent requests", () => {
+    return request(app)
+      .delete("/api/comments/1234")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.message).toBe("Not found");
       });
   });
 });
