@@ -1,4 +1,3 @@
-const { Query } = require("pg");
 const db = require("../db/connection");
 
 const readTopics = () => {
@@ -8,7 +7,7 @@ const readTopics = () => {
 };
 
 const readArticles = (query) => {
-  validSorts = [
+  const validSorts = [
     "author",
     "title",
     "topic",
@@ -16,9 +15,11 @@ const readArticles = (query) => {
     "created_at",
     "votes",
   ];
-  validOrders = ["ASC", "DESC"];
+  const validOrders = ["ASC", "DESC"];
 
   const topic = query.topic;
+
+  const order = query.order || "DESC";
 
   const sortBy = !query.sort_by
     ? "created_at"
@@ -26,45 +27,30 @@ const readArticles = (query) => {
         return sort === query.sort_by;
       });
 
+  const orderArray = validOrders.find((validOrder) => {
+    return validOrder === order.toUpperCase();
+  });
+
   const orderBy = !query.order
     ? "DESC"
-    : validOrders.filter((order) => {
-        return order === query.order.toUpperCase();
-      });
-
-  if (!query.topic && !query.sort_by && !query.order) {
-    return db
-      .query(
-        `SELECT articles.article_id, articles.article_img_url, articles.author, articles.created_at, articles.title, articles.votes, articles.topic, COUNT(comments.article_id) AS comment_count
-      FROM articles
-      LEFT JOIN comments on comments.article_id = articles.article_id
-      GROUP BY articles.article_id
-      ORDER BY articles.created_at DESC;`
-      )
-
-      .then((articles) => {
-        return articles.rows;
-      });
-  } else {
-    let queryString = `SELECT * FROM articles `;
-    const queries = [];
-    if (query.topic) {
-      queries.push(topic);
-      queryString += `WHERE topic =$1`;
-    }
-    if (query.sort_by || query.order) {
-      queryString += `ORDER BY ${sortBy} ${orderBy}`;
-    }
-    console.log(queryString);
-    return db
-      .query(queryString, queries)
-      .then((articles) => {
-        return articles.rows;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    : orderArray === undefined || orderArray.length > 0
+    ? orderArray
+    : "ERROR";
+  const queryValues = [];
+  let queryString = `SELECT articles.article_id, articles.article_img_url, articles.author, articles.created_at, articles.title, articles.votes, articles.topic, COUNT(comments.article_id) AS comment_count
+  FROM articles       
+  LEFT JOIN comments on comments.article_id = articles.article_id`;
+  if (topic) {
+    queryString += `
+      WHERE topic = $1`;
+    queryValues.push(topic);
   }
+  queryString += `  
+    GROUP BY articles.article_id
+    ORDER BY articles.${sortBy} ${orderBy};`;
+  return db.query(queryString, queryValues).then((articles) => {
+    return articles.rows;
+  });
 };
 const readArticle = (articleId) => {
   return db

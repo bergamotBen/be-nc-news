@@ -40,6 +40,7 @@ describe("GET /api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
+        console.log(body.articles);
         expect(body.articles).toBeInstanceOf(Array);
       });
   });
@@ -101,12 +102,28 @@ describe("GET /api/articles (queries)", () => {
         expect(body.articles).toBeSortedBy("author", { descending: true });
       });
   });
-  it.only("returns results by created_at ASC", () => {
+  it("returns 400 and rejects an invalid column", () => {
     return request(app)
-      .get("/api/articles?order=ac")
+      .get("/api/articles?sort_by=articles")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toBe("invalid type");
+      });
+  });
+  it("returns results by created_at ASC", () => {
+    return request(app)
+      .get("/api/articles?order=ASC")
       .expect(200)
       .then(({ body }) => {
-        expect(body.articles).toBeSortedBy("created_at", { ascending: false });
+        expect(body.articles).toBeSortedBy("created_at", { ascending: true });
+      });
+  });
+  it("returns 400 and rejects an invalid order", () => {
+    return request(app)
+      .get("/api/articles?order=order")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toBe("invalid type");
       });
   });
 });

@@ -16,14 +16,14 @@ const getTopics = (req, res) => {
     });
 };
 
-const getArticles = (req, res) => {
+const getArticles = (req, res, next) => {
   const query = req.query;
   readArticles(query)
     .then((rows) => {
       res.status(200).send({ articles: rows });
     })
     .catch((err) => {
-      res.status(err.status).send({ msg: err.message });
+      next(err);
     });
 };
 
