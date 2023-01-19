@@ -7,6 +7,7 @@ const {
   getCommentsByArticleId,
   patchVotes,
   getUsers,
+  getEndpoints,
 } = require("./controllers/controllers");
 const app = express();
 
@@ -19,11 +20,9 @@ app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 app.post("/api/articles/:article_id/comments", postComment);
 app.patch("/api/articles/:article_id", patchVotes);
 app.get("/api/users", getUsers);
+app.get("/api", getEndpoints);
 
 app.use((err, req, res, next) => {
-  if (err.status === 400) {
-    return res.status(err.status).send({ message: err.message });
-  }
   if (err.code === "23502") {
     return res.status(400).send({ message: "incomplete" });
   }
@@ -36,22 +35,17 @@ app.use((err, req, res, next) => {
   next(err);
 });
 
-app.use((req, res, next) => {
-  res.status(404).send({ message: "Not found" });
-});
-
 app.use((err, req, res, next) => {
-  if (err.code === "22P02") {
-    return res.status(400).send({ message: "Bad request" });
+  if (err.status === 400) {
+    return res.status(err.status).send({ message: err.message });
   }
-
   if (err.status === 404) {
     return res.status(err.status).send({ message: "Not found" });
   }
   next(err);
 });
 app.use((req, res, next) => {
-  res.status(404).send({ message: "Not found" });
+  res.status(404).send({ message: "not found" });
 });
 
 module.exports = app;

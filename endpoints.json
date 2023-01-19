@@ -1,17 +1,16 @@
 {
   "GET /api": {
-    "description": "serves up a json representation of all the available endpoints of the api"
+    "description": "returns a json representation of all the available endpoints of the api"
   },
   "GET /api/topics": {
-    "description": "serves an array of all topics",
-    "queries": [],
+    "description": "returns an array of all topics",
     "exampleResponse": {
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
   "GET /api/articles": {
-    "description": "serves an array of all topics",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "description": "returns an array of all topics",
+    "queries": ["topic", "sort_by", "order"],
     "exampleResponse": {
       "articles": [
         {
@@ -23,5 +22,74 @@
         }
       ]
     }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "returns an article object by its id",
+    "exampleResponse": {
+      "article": {
+        "article_id": 1,
+        "title": "Seafood substitutions are increasing",
+        "topic": "cooking",
+        "author": "weegembump",
+        "body": "Text from the article..",
+        "created_at": 1527695953341,
+        "votes": 100,
+        "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        "comment_count": 1
+      }
+    }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "returns an array of comments on an article by its id",
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 1,
+          "votes": 100,
+          "created_at": 1527695953341,
+          "author": "name",
+          "body": "comment text",
+          "article_id": 1
+        }
+      ]
+    }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "adds a comment about the specified article",
+    "exampleResponse": {
+      "username": "butter_bridge",
+      "body": "an inspirational read"
+    }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "adjusts the number of votes on a comment",
+    "exampleResponse": {
+      "article": {
+        "article_id": 1,
+        "title": "Seafood substitutions are increasing",
+        "topic": "cooking",
+        "author": "weegembump",
+        "body": "Text from the article..",
+        "created_at": 1527695953341,
+        "votes": 100,
+        "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        "comment_count": 1
+      }
+    }
+  },
+  "GET /api/users": {
+    "description": "returns and array of all users",
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "bergamotBen",
+          "name": "Ben",
+          "avatar_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+        }
+      ]
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "removes a comment by its id"
   }
 }

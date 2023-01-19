@@ -6,6 +6,7 @@ const {
   readCommentsByArticleId,
   readUsers,
   updateVotes,
+  readEndpoints,
 } = require("../models/models");
 
 const getTopics = (req, res) => {
@@ -45,7 +46,7 @@ const getCommentsByArticleId = (req, res, next) => {
   ])
     .then((comments) => {
       if (comments[1].article === undefined) {
-        return Promise.reject({ status: 404, msg: "uh oh" });
+        return Promise.reject({ status: 404 });
       }
       res.status(200).send({ comments: comments[0] });
     })
@@ -81,6 +82,11 @@ const getUsers = (req, res) => {
     res.status(200).send({ users });
   });
 };
+const getEndpoints = (req, res) => {
+  readEndpoints().then((data) => {
+    res.status(200).send({ endpoints: data });
+  });
+};
 module.exports = {
   getTopics,
   getArticles,
@@ -89,4 +95,5 @@ module.exports = {
   getCommentsByArticleId,
   patchVotes,
   getUsers,
+  getEndpoints,
 };
