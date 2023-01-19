@@ -4,6 +4,7 @@ const {
   readArticle,
   createComment,
   readCommentsByArticleId,
+  updateVotes,
 } = require("../models/models");
 
 const getTopics = (req, res) => {
@@ -15,7 +16,6 @@ const getTopics = (req, res) => {
       res.status(err.status).send({ msg: err.message });
     });
 };
-
 const getArticles = (req, res) => {
   readArticles()
     .then((rows) => {
@@ -25,11 +25,10 @@ const getArticles = (req, res) => {
       res.status(err.status).send({ msg: err.message });
     });
 };
-
 const getArticle = (req, res, next) => {
   const articleId = req.params;
 
-  readArticle(articleId)
+  readArticle(articleId.article_id)
     .then((article) => {
       res.status(200).send(article);
     })
@@ -38,8 +37,11 @@ const getArticle = (req, res, next) => {
     });
 };
 const getCommentsByArticleId = (req, res, next) => {
-  const article_id = req.params;
-  Promise.all([readCommentsByArticleId(article_id), readArticle(article_id)])
+  const articleId = req.params;
+  Promise.all([
+    readCommentsByArticleId(articleId.article_id),
+    readArticle(articleId.article_id),
+  ])
     .then((comments) => {
       if (comments[1].article === undefined) {
         return Promise.reject({ status: 404, msg: "uh oh" });
@@ -62,10 +64,22 @@ const postComment = (req, res, next) => {
       next(err);
     });
 };
+const patchVotes = (req, res, next) => {
+  const articleId = req.params;
+  const incVotes = req.body;
+  updateVotes(articleId.article_id, incVotes.inc_votes)
+    .then((article) => {
+      res.status(202).send(article);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
 module.exports = {
   getTopics,
   getArticles,
   getArticle,
   postComment,
   getCommentsByArticleId,
+  patchVotes,
 };
