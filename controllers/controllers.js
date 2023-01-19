@@ -76,7 +76,6 @@ const patchVotes = (req, res, next) => {
       next(err);
     });
 };
-
 const getUsers = (req, res) => {
   readUsers().then((users) => {
     res.status(200).send({ users });

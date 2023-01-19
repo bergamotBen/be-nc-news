@@ -5,7 +5,6 @@ const readTopics = () => {
     return data.rows;
   });
 };
-
 const readArticles = () => {
   return db
     .query(
@@ -19,7 +18,6 @@ const readArticles = () => {
       return articles.rows;
     });
 };
-
 const readArticle = (articleId) => {
   return db
     .query(
@@ -78,7 +76,6 @@ RETURNING *`,
       return readArticle(articleId);
     });
 };
-
 const readUsers = () => {
   return db
     .query(
