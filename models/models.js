@@ -78,6 +78,18 @@ RETURNING *`,
       return readArticle(articleId);
     });
 };
+
+const readUsers = () => {
+  return db
+    .query(
+      `
+  SELECT * FROM users`
+    )
+    .then((data) => {
+      return data.rows;
+    });
+};
+
 module.exports = {
   readTopics,
   readArticles,
@@ -85,4 +97,5 @@ module.exports = {
   createComment,
   readCommentsByArticleId,
   updateVotes,
+  readUsers,
 };

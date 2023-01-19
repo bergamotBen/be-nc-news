@@ -281,3 +281,22 @@ it("returns 404 when given a valid but nonexistent article id", () => {
       expect(body.message).toBe("Not found");
     });
 });
+
+describe("GET /api/users", () => {
+  it("responds with a status 200 and an object with an array of users", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        body.users.forEach((user) => {
+          expect(user).toHaveProperty("username");
+          expect(user).toHaveProperty("name");
+          expect(user).toHaveProperty("avatar_url");
+
+          expect(typeof user.username).toBe("string");
+          expect(typeof user.name).toBe("string");
+          expect(typeof user.avatar_url).toBe("string");
+        });
+      });
+  });
+});

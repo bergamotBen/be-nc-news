@@ -6,6 +6,7 @@ const {
   postComment,
   getCommentsByArticleId,
   patchVotes,
+  getUsers,
 } = require("./controllers/controllers");
 const app = express();
 
@@ -17,6 +18,7 @@ app.get("/api/articles/:article_id", getArticle);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 app.post("/api/articles/:article_id/comments", postComment);
 app.patch("/api/articles/:article_id", patchVotes);
+app.get("/api/users", getUsers);
 
 app.use((err, req, res, next) => {
   if (err.status === 400) {

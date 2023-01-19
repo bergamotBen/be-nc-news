@@ -4,6 +4,7 @@ const {
   readArticle,
   createComment,
   readCommentsByArticleId,
+  readUsers,
   updateVotes,
 } = require("../models/models");
 
@@ -75,6 +76,12 @@ const patchVotes = (req, res, next) => {
       next(err);
     });
 };
+
+const getUsers = (req, res) => {
+  readUsers().then((users) => {
+    res.status(200).send({ users });
+  });
+};
 module.exports = {
   getTopics,
   getArticles,
@@ -82,4 +89,5 @@ module.exports = {
   postComment,
   getCommentsByArticleId,
   patchVotes,
+  getUsers,
 };
