@@ -25,7 +25,7 @@ const readArticle = (articleId) => {
     .query(
       `
     SELECT * FROM articles WHERE article_id=$1`,
-      [articleId.article_id]
+      [articleId]
     )
     .then(({ rows }) => {
       if (rows === 0) {
@@ -34,7 +34,6 @@ const readArticle = (articleId) => {
       return { article: rows[0] };
     });
 };
-
 const readCommentsByArticleId = (article_id) => {
   return db
     .query(
@@ -46,7 +45,6 @@ const readCommentsByArticleId = (article_id) => {
       return comments.rows;
     });
 };
-
 const createComment = (comment, articleId) => {
   return db
     .query(
@@ -59,6 +57,25 @@ const createComment = (comment, articleId) => {
     )
     .then(({ rows }) => {
       return rows[0];
+    });
+};
+const updateVotes = (articleId, incVotes) => {
+  return db
+    .query(
+      `
+  UPDATE articles
+SET votes = votes + $1
+WHERE article_id = $2
+RETURNING *`,
+      [incVotes, articleId]
+    )
+    .then((votes) => {
+      if (votes.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      }
+    })
+    .then(() => {
+      return readArticle(articleId);
     });
 };
 
@@ -79,5 +96,6 @@ module.exports = {
   readArticle,
   createComment,
   readCommentsByArticleId,
+  updateVotes,
   readUsers,
 };
