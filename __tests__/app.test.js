@@ -197,7 +197,6 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(body.message).toBe("incomplete");
       });
   });
-
   it("returns 400 given a bad article_id", () => {
     return request(app)
       .post("/api/articles/article/comments")
@@ -281,6 +280,7 @@ describe("PATCH /api/articles/:article_id", () => {
       });
   });
 });
+
 describe("GET /api/users", () => {
   it("responds with a status 200 and an object with an array of users", () => {
     return request(app)
