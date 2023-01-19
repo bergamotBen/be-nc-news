@@ -254,6 +254,15 @@ it("increments votes by the inc_votes value", () => {
       expect(body.article.votes).toBe(101);
     });
 });
+it("rejects patches of invalid type", () => {
+  return request(app)
+    .patch("/api/articles/1")
+    .send({ inc_votes: "vote" })
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.message).toBe("invalid type");
+    });
+});
 it("returns 400 when given an invalid article_id", () => {
   return request(app)
     .patch("/api/articles/article")
