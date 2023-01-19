@@ -207,7 +207,6 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(body.message).toBe("invalid type");
       });
   });
-
   it("returns 404 given a valid but nonexistent article_id", () => {
     return request(app)
       .post("/api/articles/1234/comments")
@@ -219,69 +218,69 @@ describe("POST /api/articles/:article_id/comments", () => {
   });
 });
 
-describe("PATCH /api/articles/:article_id", () => {});
-it("returns a staus of 202 and responds with the article", () => {
-  return request(app)
-    .patch("/api/articles/1")
-    .send({ inc_votes: 1 })
-    .expect(202)
-    .then(({ body }) => {
-      expect(body.article).toHaveProperty("article_id");
-      expect(body.article).toHaveProperty("title");
-      expect(body.article).toHaveProperty("topic");
-      expect(body.article).toHaveProperty("author");
-      expect(body.article).toHaveProperty("body");
-      expect(body.article).toHaveProperty("votes");
-      expect(body.article).toHaveProperty("created_at");
-      expect(body.article).toHaveProperty("article_img_url");
+describe("PATCH /api/articles/:article_id", () => {
+  it("returns a staus of 202 and responds with the article", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: 1 })
+      .expect(202)
+      .then(({ body }) => {
+        expect(body.article).toHaveProperty("article_id");
+        expect(body.article).toHaveProperty("title");
+        expect(body.article).toHaveProperty("topic");
+        expect(body.article).toHaveProperty("author");
+        expect(body.article).toHaveProperty("body");
+        expect(body.article).toHaveProperty("votes");
+        expect(body.article).toHaveProperty("created_at");
+        expect(body.article).toHaveProperty("article_img_url");
 
-      expect(typeof body.article.article_id).toBe("number");
-      expect(typeof body.article.title).toBe("string");
-      expect(typeof body.article.topic).toBe("string");
-      expect(typeof body.article.author).toBe("string");
-      expect(typeof body.article.body).toBe("string");
-      expect(typeof body.article.votes).toBe("number");
-      expect(typeof body.article.created_at).toBe("string");
-      expect(typeof body.article.article_img_url).toBe("string");
-    });
+        expect(typeof body.article.article_id).toBe("number");
+        expect(typeof body.article.title).toBe("string");
+        expect(typeof body.article.topic).toBe("string");
+        expect(typeof body.article.author).toBe("string");
+        expect(typeof body.article.body).toBe("string");
+        expect(typeof body.article.votes).toBe("number");
+        expect(typeof body.article.created_at).toBe("string");
+        expect(typeof body.article.article_img_url).toBe("string");
+      });
+  });
+  it("increments votes by the inc_votes value", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: 1 })
+      .expect(202)
+      .then(({ body }) => {
+        expect(body.article.votes).toBe(101);
+      });
+  });
+  it("rejects patches of invalid type", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: "vote" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toBe("invalid type");
+      });
+  });
+  it("returns 400 when given an invalid article_id", () => {
+    return request(app)
+      .patch("/api/articles/article")
+      .send({ inc_votes: 1 })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toBe("invalid type");
+      });
+  });
+  it("returns 404 when given a valid but nonexistent article id", () => {
+    return request(app)
+      .patch("/api/articles/1234")
+      .send({ inc_votes: 1 })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.message).toBe("Not found");
+      });
+  });
 });
-it("increments votes by the inc_votes value", () => {
-  return request(app)
-    .patch("/api/articles/1")
-    .send({ inc_votes: 1 })
-    .expect(202)
-    .then(({ body }) => {
-      expect(body.article.votes).toBe(101);
-    });
-});
-it("rejects patches of invalid type", () => {
-  return request(app)
-    .patch("/api/articles/1")
-    .send({ inc_votes: "vote" })
-    .expect(400)
-    .then(({ body }) => {
-      expect(body.message).toBe("invalid type");
-    });
-});
-it("returns 400 when given an invalid article_id", () => {
-  return request(app)
-    .patch("/api/articles/article")
-    .send({ inc_votes: 1 })
-    .expect(400)
-    .then(({ body }) => {
-      expect(body.message).toBe("invalid type");
-    });
-});
-it("returns 404 when given a valid but nonexistent article id", () => {
-  return request(app)
-    .patch("/api/articles/1234")
-    .send({ inc_votes: 1 })
-    .expect(404)
-    .then(({ body }) => {
-      expect(body.message).toBe("Not found");
-    });
-});
-
 describe("GET /api/users", () => {
   it("responds with a status 200 and an object with an array of users", () => {
     return request(app)
