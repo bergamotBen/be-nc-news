@@ -18,11 +18,17 @@ const readArticles = () => {
       return articles.rows;
     });
 };
+
 const readArticle = (articleId) => {
   return db
     .query(
-      `
-    SELECT * FROM articles WHERE article_id=$1`,
+      `SELECT articles.article_id, articles.article_img_url, articles.author, articles.created_at, articles.title, articles.votes, articles.topic, articles.body, COUNT(comments.article_id) AS comment_count
+      FROM articles
+      LEFT JOIN comments on comments.article_id = articles.article_id
+      WHERE articles.article_id=$1
+      GROUP BY articles.article_id
+      ORDER BY articles.created_at DESC;
+      `,
       [articleId]
     )
     .then(({ rows }) => {

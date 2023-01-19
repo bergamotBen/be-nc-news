@@ -266,6 +266,7 @@ describe("PATCH /api/articles/:article_id", () => {
   it("returns 400 when given an invalid article_id", () => {
     return request(app)
       .patch("/api/articles/article")
+
       .send({ inc_votes: 1 })
       .expect(400)
       .then(({ body }) => {
@@ -284,7 +285,14 @@ describe("PATCH /api/articles/:article_id", () => {
 });
 
 describe("GET /api/articles/article_id (comment_count)", () => {
-  it("should ", () => {});
+  it("return 200 and a key of comment count ", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toHaveProperty("comment_count");
+      });
+  });
 });
 
 describe("GET /api/users", () => {
