@@ -81,6 +81,36 @@ describe("GET /api/articles", () => {
   });
 });
 
+describe("GET /api/articles (queries)", () => {
+  it("returns 200 and articles with a topic of 'mitch'", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body }) => {
+        body.articles.map((article) => {
+          expect(article).toHaveProperty("topic");
+          expect(article.topic).toBe("mitch");
+        });
+      });
+  });
+  it("returns 200 and sorts by any valid column", () => {
+    return request(app)
+      .get("/api/articles?sort_by=author")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy("author", { descending: true });
+      });
+  });
+  it.only("returns results by created_at ASC", () => {
+    return request(app)
+      .get("/api/articles?order=ac")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy("created_at", { ascending: false });
+      });
+  });
+});
+
 describe("GET /api/articles/:article_id", () => {
   it("returns 200 and the requested article", () => {
     return request(app)
