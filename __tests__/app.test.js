@@ -225,14 +225,7 @@ describe("GET /api/users", () => {
       .get("/api/users")
       .expect(200)
       .then(({ body }) => {
-        /* 
-        expect(typeof body.users).toBe("array");
-        This test returns "object" and I can't work out why.
-        Surely, because I can map body.users beneath,
-        it is an array?
-        */
-
-        body.users.map((user) => {
+        body.users.forEach((user) => {
           expect(user).toHaveProperty("username");
           expect(user).toHaveProperty("name");
           expect(user).toHaveProperty("avatar_url");
