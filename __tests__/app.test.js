@@ -218,3 +218,29 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("GET /api/users", () => {
+  it("responds with a status 200 and an object with an array of users", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        /* 
+        expect(typeof body.users).toBe("array");
+        This test returns "object" and I can't work out why.
+        Surely, because I can map body.users beneath,
+        it is an array?
+        */
+
+        body.users.map((user) => {
+          expect(user).toHaveProperty("username");
+          expect(user).toHaveProperty("name");
+          expect(user).toHaveProperty("avatar_url");
+
+          expect(typeof user.username).toBe("string");
+          expect(typeof user.name).toBe("string");
+          expect(typeof user.avatar_url).toBe("string");
+        });
+      });
+  });
+});

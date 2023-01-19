@@ -4,6 +4,7 @@ const {
   readArticle,
   createComment,
   readCommentsByArticleId,
+  readUsers,
 } = require("../models/models");
 
 const getTopics = (req, res) => {
@@ -62,10 +63,17 @@ const postComment = (req, res, next) => {
       next(err);
     });
 };
+
+const getUsers = (req, res) => {
+  readUsers().then((users) => {
+    res.status(200).send({ users });
+  });
+};
 module.exports = {
   getTopics,
   getArticles,
   getArticle,
   postComment,
   getCommentsByArticleId,
+  getUsers,
 };

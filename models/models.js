@@ -20,21 +20,6 @@ const readArticles = () => {
     });
 };
 
-// const readArticle = (articleId) => {
-//   return db
-//     .query(
-//       `
-// SELECT * FROM articles WHERE article_id=$1`,
-//       [articleId.article_id]
-//     )
-//     .then(({ rows }) => {
-//       return { article: rows[0] };
-//     })
-//     .catch(() => {
-//       return Promise.reject({ status: 400, message: "Bad request" });
-//     });
-// };
-
 const readArticle = (articleId) => {
   return db
     .query(
@@ -76,10 +61,23 @@ const createComment = (comment, articleId) => {
       return rows[0];
     });
 };
+
+const readUsers = () => {
+  return db
+    .query(
+      `
+  SELECT * FROM users`
+    )
+    .then((data) => {
+      return data.rows;
+    });
+};
+
 module.exports = {
   readTopics,
   readArticles,
   readArticle,
   createComment,
   readCommentsByArticleId,
+  readUsers,
 };
