@@ -264,6 +264,7 @@ describe("PATCH /api/articles/:article_id", () => {
   it("returns 400 when given an invalid article_id", () => {
     return request(app)
       .patch("/api/articles/article")
+
       .send({ inc_votes: 1 })
       .expect(400)
       .then(({ body }) => {
@@ -277,6 +278,17 @@ describe("PATCH /api/articles/:article_id", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.message).toBe("Not found");
+      });
+  });
+});
+
+describe("GET /api/articles/article_id (comment_count)", () => {
+  it("return 200 and a key of comment count ", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toHaveProperty("comment_count");
       });
   });
 });
@@ -323,6 +335,37 @@ describe("GET /api", () => {
         expect(body.endpoints).toHaveProperty(
           "DELETE /api/comments/:comment_id"
         );
+      });
+  });
+});
+
+describe("DELETE /api/comments/:comment_id", () => {
+  it("return a status of 204 and no content in db ", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then(() => {
+        return db
+          .query(`SELECT * FROM comments WHERE comment_id = 1;`)
+          .then((result) => {
+            expect(result.rows).toHaveLength(0);
+          });
+      });
+  });
+  it("returns 400 and rejects invalid types", () => {
+    return request(app)
+      .delete("/api/comments/comment")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toBe("invalid type");
+      });
+  });
+  it("returns 404 and not found for valid but nonexistent requests", () => {
+    return request(app)
+      .delete("/api/comments/1234")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.message).toBe("Not found");
       });
   });
 });

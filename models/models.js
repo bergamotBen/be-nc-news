@@ -22,8 +22,13 @@ const readArticles = () => {
 const readArticle = (articleId) => {
   return db
     .query(
-      `
-    SELECT * FROM articles WHERE article_id=$1`,
+      `SELECT articles.article_id, articles.article_img_url, articles.author, articles.created_at, articles.title, articles.votes, articles.topic, articles.body, COUNT(comments.article_id) AS comment_count
+      FROM articles
+      LEFT JOIN comments on comments.article_id = articles.article_id
+      WHERE articles.article_id=$1
+      GROUP BY articles.article_id
+      ORDER BY articles.created_at DESC;
+      `,
       [articleId]
     )
     .then(({ rows }) => {
@@ -87,6 +92,21 @@ const readUsers = () => {
       return data.rows;
     });
 };
+const removeCommentById = (commentId) => {
+  return db
+    .query(
+      `DELETE FROM comments
+    WHERE comment_id =$1
+    RETURNING *`,
+      [commentId]
+    )
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      }
+      return { article: rows };
+    });
+};
 const readEndpoints = () => {
   return fs.readFile("./endpoints.json", "utf-8").then((data) => {
     return JSON.parse(data);
@@ -100,5 +120,6 @@ module.exports = {
   readCommentsByArticleId,
   updateVotes,
   readUsers,
+  removeCommentById,
   readEndpoints,
 };
