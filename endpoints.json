@@ -4,14 +4,14 @@
   },
   "GET /api/topics": {
     "description": "returns an array of all topics",
-    "exampleResponse": {
+    "exampleBody": {
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
   "GET /api/articles": {
     "description": "returns an array of all topics",
     "queries": ["topic", "sort_by", "order"],
-    "exampleResponse": {
+    "exampleBody": {
       "articles": [
         {
           "title": "Seafood substitutions are increasing",
@@ -25,7 +25,7 @@
   },
   "GET /api/articles/:article_id": {
     "description": "returns an article object by its id",
-    "exampleResponse": {
+    "exampleBody": {
       "article": {
         "article_id": 1,
         "title": "Seafood substitutions are increasing",
@@ -41,7 +41,7 @@
   },
   "GET /api/articles/:article_id/comments": {
     "description": "returns an array of comments on an article by its id",
-    "exampleResponse": {
+    "exampleBody": {
       "comments": [
         {
           "comment_id": 1,
@@ -56,14 +56,14 @@
   },
   "POST /api/articles/:article_id/comments": {
     "description": "adds a comment about the specified article",
-    "exampleResponse": {
+    "exampleBody": {
       "username": "butter_bridge",
       "body": "an inspirational read"
     }
   },
   "PATCH /api/articles/:article_id": {
     "description": "adjusts the number of votes on a comment",
-    "exampleResponse": {
+    "exampleBody": {
       "article": {
         "article_id": 1,
         "title": "Seafood substitutions are increasing",
@@ -79,7 +79,7 @@
   },
   "GET /api/users": {
     "description": "returns and array of all users",
-    "exampleResponse": {
+    "exampleBody": {
       "users": [
         {
           "username": "bergamotBen",
@@ -90,6 +90,7 @@
     }
   },
   "DELETE /api/comments/:comment_id": {
-    "description": "removes a comment by its id"
+    "description": "removes a comment by its id",
+    "exampleBody": {}
   }
 }
