@@ -197,7 +197,6 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(body.message).toBe("incomplete");
       });
   });
-
   it("returns 400 given a bad article_id", () => {
     return request(app)
       .post("/api/articles/article/comments")
@@ -265,6 +264,7 @@ describe("PATCH /api/articles/:article_id", () => {
   it("returns 400 when given an invalid article_id", () => {
     return request(app)
       .patch("/api/articles/article")
+
       .send({ inc_votes: 1 })
       .expect(400)
       .then(({ body }) => {
@@ -278,6 +278,17 @@ describe("PATCH /api/articles/:article_id", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.message).toBe("Not found");
+      });
+  });
+});
+
+describe("GET /api/articles/article_id (comment_count)", () => {
+  it("return 200 and a key of comment count ", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toHaveProperty("comment_count");
       });
   });
 });
