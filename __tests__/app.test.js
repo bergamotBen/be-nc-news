@@ -120,7 +120,7 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/article/123")
       .expect(404)
       .then(({ body }) => {
-        expect(body.message).toBe("Not found");
+        expect(body.message).toBe("not found");
       });
   });
 });
@@ -308,6 +308,33 @@ describe("GET /api/users", () => {
           expect(typeof user.name).toBe("string");
           expect(typeof user.avatar_url).toBe("string");
         });
+      });
+  });
+});
+
+describe("GET /api", () => {
+  it("returns a status of 200 and an object with an array of endpoints", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.endpoints).toHaveProperty("GET /api");
+        expect(body.endpoints).toHaveProperty("GET /api/topics");
+        expect(body.endpoints).toHaveProperty("GET /api/articles");
+        expect(body.endpoints).toHaveProperty("GET /api/articles/:article_id");
+        expect(body.endpoints).toHaveProperty(
+          "GET /api/articles/:article_id/comments"
+        );
+        expect(body.endpoints).toHaveProperty(
+          "POST /api/articles/:article_id/comments"
+        );
+        expect(body.endpoints).toHaveProperty(
+          "PATCH /api/articles/:article_id"
+        );
+        expect(body.endpoints).toHaveProperty("GET /api/users");
+        expect(body.endpoints).toHaveProperty(
+          "DELETE /api/comments/:comment_id"
+        );
       });
   });
 });

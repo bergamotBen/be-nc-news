@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const fs = require("fs/promises");
 
 const readTopics = () => {
   return db.query(`SELECT * FROM topics;`).then((data) => {
@@ -32,7 +33,7 @@ const readArticle = (articleId) => {
     )
     .then(({ rows }) => {
       if (rows === 0) {
-        return Promise.reject({ status: 404, msg: "Not found" });
+        return Promise.reject({ status: 404 });
       }
       return { article: rows[0] };
     });
@@ -74,7 +75,7 @@ RETURNING *`,
     )
     .then((votes) => {
       if (votes.rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "Not found" });
+        return Promise.reject({ status: 404 });
       }
     })
     .then(() => {
@@ -106,6 +107,11 @@ const removeCommentById = (commentId) => {
       return { article: rows };
     });
 };
+const readEndpoints = () => {
+  return fs.readFile("./endpoints.json", "utf-8").then((data) => {
+    return JSON.parse(data);
+  });
+};
 module.exports = {
   readTopics,
   readArticles,
@@ -115,4 +121,5 @@ module.exports = {
   updateVotes,
   readUsers,
   removeCommentById,
+  readEndpoints,
 };
