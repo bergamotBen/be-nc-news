@@ -179,6 +179,19 @@ describe("POST /api/articles/:article_id/comments", () => {
         });
       });
   });
+  it("appears in the comments table", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({ username: "butter_bridge", body: "an inspirational read" })
+      .expect(201)
+      .then(({ body }) => {
+        return db
+          .query(`SELECT * FROM comments WHERE comment_id = 19;`)
+          .then(({ data }) => {
+            expect(body).toEqual({ body: "an inspirational read" });
+          });
+      });
+  });
   it("returns 400 if username key is missing", () => {
     return request(app)
       .post("/api/articles/1/comments")
