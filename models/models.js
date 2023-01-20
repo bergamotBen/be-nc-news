@@ -159,6 +159,24 @@ const readUser = (username) => {
       return data.rows[0];
     });
 };
+const updateCommentVotes = (commentId, incVotes) => {
+  return db
+    .query(
+      `
+UPDATE comments
+SET votes = votes + $1
+WHERE comment_id = $2
+RETURNING *`,
+      [incVotes, commentId]
+    )
+    .then((comment) => {
+      if (comment.rows.length === 0) {
+        return Promise.reject({ status: 404 });
+      }
+      return comment.rows[0];
+    });
+};
+
 module.exports = {
   readTopics,
   readArticles,
@@ -170,4 +188,5 @@ module.exports = {
   removeCommentById,
   readEndpoints,
   readUser,
+  updateCommentVotes,
 };

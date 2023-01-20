@@ -463,3 +463,64 @@ describe("GET /api/users/:username", () => {
       });
   });
 });
+
+describe("PATCH /api/comments/:comment_id", () => {
+  it("returns a staus of 200 and responds with the article", () => {
+    return request(app)
+      .patch("/api/comments/1")
+      .send({ inc_votes: 1 })
+      .expect(202)
+      .then(({ body }) => {
+        expect(body.comment).toHaveProperty("comment_id");
+        expect(body.comment).toHaveProperty("body");
+        expect(body.comment).toHaveProperty("author");
+        expect(body.comment).toHaveProperty("article_id");
+        expect(body.comment).toHaveProperty("votes");
+        expect(body.comment).toHaveProperty("created_at");
+
+        expect(typeof body.comment.article_id).toBe("number");
+        expect(typeof body.comment.comment_id).toBe("number");
+        expect(typeof body.comment.author).toBe("string");
+        expect(typeof body.comment.body).toBe("string");
+        expect(typeof body.comment.votes).toBe("number");
+        expect(typeof body.comment.created_at).toBe("string");
+      });
+  });
+  it("increments votes by the inc_votes value", () => {
+    return request(app)
+      .patch("/api/comments/1")
+      .send({ inc_votes: 1 })
+      .expect(202)
+      .then(({ body }) => {
+        expect(body.comment.votes).toBe(17);
+      });
+  });
+  it("rejects patches of invalid type", () => {
+    return request(app)
+      .patch("/api/comments/1")
+      .send({ inc_votes: "vote" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toBe("invalid type");
+      });
+  });
+  it("returns 400 when given an invalid comment_id", () => {
+    return request(app)
+      .patch("/api/comments/comment")
+
+      .send({ inc_votes: 1 })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toBe("invalid type");
+      });
+  });
+  it("returns 404 when given a valid but nonexistent comment_id", () => {
+    return request(app)
+      .patch("/api/comments/1234")
+      .send({ inc_votes: 1 })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.message).toBe("Not found");
+      });
+  });
+});

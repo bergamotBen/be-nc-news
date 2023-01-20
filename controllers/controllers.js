@@ -10,6 +10,7 @@ const {
   removeCommentById,
   readEndpoints,
   readUser,
+  updateCommentVotes,
 } = require("../models/models");
 
 const getTopics = (req, res) => {
@@ -111,6 +112,17 @@ const getUser = (req, res, next) => {
       next(err);
     });
 };
+const patchCommentVotes = (req, res, next) => {
+  const commentId = req.params;
+  const incVotes = req.body;
+  updateCommentVotes(commentId.comment_id, incVotes.inc_votes)
+    .then((data) => {
+      res.status(202).send({ comment: data });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
 module.exports = {
   getTopics,
   getArticles,
@@ -122,4 +134,5 @@ module.exports = {
   deleteCommentById,
   getEndpoints,
   getUser,
+  patchCommentVotes,
 };
