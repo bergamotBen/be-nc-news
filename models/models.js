@@ -18,7 +18,6 @@ const readArticles = () => {
       return articles.rows;
     });
 };
-
 const readArticle = (articleId) => {
   return db
     .query(
