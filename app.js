@@ -11,6 +11,7 @@ const {
   getEndpoints,
   patchCommentVotes,
   getUser,
+  postArticle,
 } = require("./controllers/controllers");
 const app = express();
 
@@ -27,6 +28,7 @@ app.delete("/api/comments/:comment_id", deleteCommentById);
 app.get("/api", getEndpoints);
 app.get("/api/users/:username", getUser);
 app.patch("/api/comments/:comment_id", patchCommentVotes);
+app.post("/api/articles", postArticle);
 
 app.use((err, req, res, next) => {
   if (err.code === "23502") {

@@ -11,6 +11,7 @@ const {
   readEndpoints,
   readUser,
   updateCommentVotes,
+  createArticle,
 } = require("../models/models");
 
 const getTopics = (req, res) => {
@@ -123,6 +124,12 @@ const patchCommentVotes = (req, res, next) => {
       next(err);
     });
 };
+const postArticle = (req, res, next) => {
+  const body = req.body;
+  createArticle(body).then(() => {
+    res.sendStatus(201);
+  });
+};
 module.exports = {
   getTopics,
   getArticles,
@@ -135,4 +142,5 @@ module.exports = {
   getEndpoints,
   getUser,
   patchCommentVotes,
+  postArticle,
 };

@@ -524,3 +524,18 @@ describe("PATCH /api/comments/:comment_id", () => {
       });
   });
 });
+describe.only("POST /api/articles", () => {
+  it("responds with a status 201 and returns the posted article", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "bergamotBen",
+        title: "Things I want to eat",
+        body: "Biscuits please.",
+        topic: "snacks",
+        article_img_url: "will default if not provided",
+      })
+      .expect(201)
+      .then((body) => {});
+  });
+});

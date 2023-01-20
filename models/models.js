@@ -176,6 +176,11 @@ RETURNING *`,
       return comment.rows[0];
     });
 };
+const createArticle = (body) => {
+  console.log(body);
+  return db.request(`
+  INSERT INTO articles ()`);
+};
 
 module.exports = {
   readTopics,
@@ -189,4 +194,5 @@ module.exports = {
   readEndpoints,
   readUser,
   updateCommentVotes,
+  createArticle,
 };
