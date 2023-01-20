@@ -1,6 +1,6 @@
 ## 📖 README contents
 
-### 🔗 Find the hosted version here: [link to follow](https://www.example.com).
+### 🔗 Find the hosted version here: [nc.news on Render](https://news-7d6f.onrender.com).
 
 ### 📋 Summary of the project.
 
@@ -94,5 +94,5 @@ The .env-example and db/setup.sql files show the format and database names.
 
 ### ⚙️ Minimum versions of node and postgres.
 
-The minimum version of node is **_
-The minimum version of postgres is _**
+The minimum version of Node is v19.1.0
+The minimum version of Postgres is v2.5.12 (171)
