@@ -1,11 +1,11 @@
 const db = require("../db/connection");
+const fs = require("fs/promises");
 
 const readTopics = () => {
   return db.query(`SELECT * FROM topics;`).then((data) => {
     return data.rows;
   });
 };
-
 const readArticles = (query) => {
   const validSorts = [
     "author",
@@ -55,18 +55,22 @@ const readArticles = (query) => {
 const readArticle = (articleId) => {
   return db
     .query(
-      `
-    SELECT * FROM articles WHERE article_id=$1`,
-      [articleId.article_id]
+      `SELECT articles.article_id, articles.article_img_url, articles.author, articles.created_at, articles.title, articles.votes, articles.topic, articles.body, COUNT(comments.article_id) AS comment_count
+      FROM articles
+      LEFT JOIN comments on comments.article_id = articles.article_id
+      WHERE articles.article_id=$1
+      GROUP BY articles.article_id
+      ORDER BY articles.created_at DESC;
+      `,
+      [articleId]
     )
     .then(({ rows }) => {
       if (rows === 0) {
-        return Promise.reject({ status: 404, msg: "Not found" });
+        return Promise.reject({ status: 404 });
       }
       return { article: rows[0] };
     });
 };
-
 const readCommentsByArticleId = (article_id) => {
   return db
     .query(
@@ -78,7 +82,6 @@ const readCommentsByArticleId = (article_id) => {
       return comments.rows;
     });
 };
-
 const createComment = (comment, articleId) => {
   return db
     .query(
@@ -93,10 +96,63 @@ const createComment = (comment, articleId) => {
       return rows[0];
     });
 };
+const updateVotes = (articleId, incVotes) => {
+  return db
+    .query(
+      `
+  UPDATE articles
+SET votes = votes + $1
+WHERE article_id = $2
+RETURNING *`,
+      [incVotes, articleId]
+    )
+    .then((votes) => {
+      if (votes.rows.length === 0) {
+        return Promise.reject({ status: 404 });
+      }
+    })
+    .then(() => {
+      return readArticle(articleId);
+    });
+};
+const readUsers = () => {
+  return db
+    .query(
+      `
+  SELECT * FROM users`
+    )
+    .then((data) => {
+      return data.rows;
+    });
+};
+const removeCommentById = (commentId) => {
+  return db
+    .query(
+      `DELETE FROM comments
+    WHERE comment_id =$1
+    RETURNING *`,
+      [commentId]
+    )
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      }
+      return { article: rows };
+    });
+};
+const readEndpoints = () => {
+  return fs.readFile("./endpoints.json", "utf-8").then((data) => {
+    return JSON.parse(data);
+  });
+};
 module.exports = {
   readTopics,
   readArticles,
   readArticle,
   createComment,
   readCommentsByArticleId,
+  updateVotes,
+  readUsers,
+  removeCommentById,
+  readEndpoints,
 };

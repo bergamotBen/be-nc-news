@@ -175,7 +175,7 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/article/123")
       .expect(404)
       .then(({ body }) => {
-        expect(body.message).toBe("Not found");
+        expect(body.message).toBe("not found");
       });
   });
 });
@@ -234,6 +234,19 @@ describe("POST /api/articles/:article_id/comments", () => {
         });
       });
   });
+  it("appears in the comments table", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({ username: "butter_bridge", body: "an inspirational read" })
+      .expect(201)
+      .then(({ body }) => {
+        return db
+          .query(`SELECT * FROM comments WHERE comment_id = 19;`)
+          .then(({ data }) => {
+            expect(body).toEqual({ body: "an inspirational read" });
+          });
+      });
+  });
   it("returns 400 if username key is missing", () => {
     return request(app)
       .post("/api/articles/1/comments")
@@ -252,7 +265,6 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(body.message).toBe("incomplete");
       });
   });
-
   it("returns 400 given a bad article_id", () => {
     return request(app)
       .post("/api/articles/article/comments")
@@ -262,7 +274,6 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(body.message).toBe("invalid type");
       });
   });
-
   it("returns 404 given a valid but nonexistent article_id", () => {
     return request(app)
       .post("/api/articles/1234/comments")
@@ -270,6 +281,159 @@ describe("POST /api/articles/:article_id/comments", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.message).toBe("not found");
+      });
+  });
+});
+
+describe("PATCH /api/articles/:article_id", () => {
+  it("returns a staus of 202 and responds with the article", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: 1 })
+      .expect(202)
+      .then(({ body }) => {
+        expect(body.article).toHaveProperty("article_id");
+        expect(body.article).toHaveProperty("title");
+        expect(body.article).toHaveProperty("topic");
+        expect(body.article).toHaveProperty("author");
+        expect(body.article).toHaveProperty("body");
+        expect(body.article).toHaveProperty("votes");
+        expect(body.article).toHaveProperty("created_at");
+        expect(body.article).toHaveProperty("article_img_url");
+
+        expect(typeof body.article.article_id).toBe("number");
+        expect(typeof body.article.title).toBe("string");
+        expect(typeof body.article.topic).toBe("string");
+        expect(typeof body.article.author).toBe("string");
+        expect(typeof body.article.body).toBe("string");
+        expect(typeof body.article.votes).toBe("number");
+        expect(typeof body.article.created_at).toBe("string");
+        expect(typeof body.article.article_img_url).toBe("string");
+      });
+  });
+  it("increments votes by the inc_votes value", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: 1 })
+      .expect(202)
+      .then(({ body }) => {
+        expect(body.article.votes).toBe(101);
+      });
+  });
+  it("rejects patches of invalid type", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: "vote" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toBe("invalid type");
+      });
+  });
+  it("returns 400 when given an invalid article_id", () => {
+    return request(app)
+      .patch("/api/articles/article")
+
+      .send({ inc_votes: 1 })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toBe("invalid type");
+      });
+  });
+  it("returns 404 when given a valid but nonexistent article id", () => {
+    return request(app)
+      .patch("/api/articles/1234")
+      .send({ inc_votes: 1 })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.message).toBe("Not found");
+      });
+  });
+});
+
+describe("GET /api/articles/article_id (comment_count)", () => {
+  it("return 200 and a key of comment count ", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toHaveProperty("comment_count");
+      });
+  });
+});
+
+describe("GET /api/users", () => {
+  it("responds with a status 200 and an object with an array of users", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        body.users.forEach((user) => {
+          expect(user).toHaveProperty("username");
+          expect(user).toHaveProperty("name");
+          expect(user).toHaveProperty("avatar_url");
+
+          expect(typeof user.username).toBe("string");
+          expect(typeof user.name).toBe("string");
+          expect(typeof user.avatar_url).toBe("string");
+        });
+      });
+  });
+});
+
+describe("GET /api", () => {
+  it("returns a status of 200 and an object with an array of endpoints", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.endpoints).toHaveProperty("GET /api");
+        expect(body.endpoints).toHaveProperty("GET /api/topics");
+        expect(body.endpoints).toHaveProperty("GET /api/articles");
+        expect(body.endpoints).toHaveProperty("GET /api/articles/:article_id");
+        expect(body.endpoints).toHaveProperty(
+          "GET /api/articles/:article_id/comments"
+        );
+        expect(body.endpoints).toHaveProperty(
+          "POST /api/articles/:article_id/comments"
+        );
+        expect(body.endpoints).toHaveProperty(
+          "PATCH /api/articles/:article_id"
+        );
+        expect(body.endpoints).toHaveProperty("GET /api/users");
+        expect(body.endpoints).toHaveProperty(
+          "DELETE /api/comments/:comment_id"
+        );
+      });
+  });
+});
+
+describe("DELETE /api/comments/:comment_id", () => {
+  it("return a status of 204 and no content in db ", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then(() => {
+        return db
+          .query(`SELECT * FROM comments WHERE comment_id = 1;`)
+          .then((result) => {
+            expect(result.rows).toHaveLength(0);
+          });
+      });
+  });
+  it("returns 400 and rejects invalid types", () => {
+    return request(app)
+      .delete("/api/comments/comment")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toBe("invalid type");
+      });
+  });
+  it("returns 404 and not found for valid but nonexistent requests", () => {
+    return request(app)
+      .delete("/api/comments/1234")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.message).toBe("Not found");
       });
   });
 });
