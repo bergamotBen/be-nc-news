@@ -10,6 +10,7 @@ const {
   deleteCommentById,
   getEndpoints,
   patchCommentVotes,
+  getUser,
 } = require("./controllers/controllers");
 const app = express();
 
@@ -24,6 +25,7 @@ app.patch("/api/articles/:article_id", patchVotes);
 app.get("/api/users", getUsers);
 app.delete("/api/comments/:comment_id", deleteCommentById);
 app.get("/api", getEndpoints);
+app.get("/api/users/:username", getUser);
 app.patch("/api/comments/:comment_id", patchCommentVotes);
 
 app.use((err, req, res, next) => {
@@ -35,6 +37,12 @@ app.use((err, req, res, next) => {
   }
   if (err.code === "23503") {
     return res.status(404).send({ message: "not found" });
+  }
+  if (err.code === "42703") {
+    return res.status(400).send({ message: "invalid type" });
+  }
+  if (err.code === "42601") {
+    return res.status(400).send({ message: "invalid type" });
   }
   next(err);
 });

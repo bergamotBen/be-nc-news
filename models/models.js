@@ -6,18 +6,51 @@ const readTopics = () => {
     return data.rows;
   });
 };
-const readArticles = () => {
-  return db
-    .query(
-      `SELECT articles.article_id, articles.article_img_url, articles.author, articles.created_at, articles.title, articles.votes, articles.topic, COUNT(comments.article_id) AS comment_count
-      FROM articles
-      LEFT JOIN comments on comments.article_id = articles.article_id
-      GROUP BY articles.article_id
-      ORDER BY articles.created_at DESC;`
-    )
-    .then((articles) => {
-      return articles.rows;
-    });
+const readArticles = (query) => {
+  const validSorts = [
+    "author",
+    "title",
+    "topic",
+    "article_id",
+    "created_at",
+    "votes",
+  ];
+  const validOrders = ["ASC", "DESC"];
+
+  const topic = query.topic;
+
+  const order = query.order || "DESC";
+
+  const sortBy = !query.sort_by
+    ? "created_at"
+    : validSorts.filter((sort) => {
+        return sort === query.sort_by;
+      });
+
+  const orderArray = validOrders.find((validOrder) => {
+    return validOrder === order.toUpperCase();
+  });
+
+  const orderBy = !query.order
+    ? "DESC"
+    : orderArray === undefined || orderArray.length > 0
+    ? orderArray
+    : "ERROR";
+  const queryValues = [];
+  let queryString = `SELECT articles.article_id, articles.article_img_url, articles.author, articles.created_at, articles.title, articles.votes, articles.topic, COUNT(comments.article_id) AS comment_count
+  FROM articles       
+  LEFT JOIN comments on comments.article_id = articles.article_id`;
+  if (topic) {
+    queryString += `
+      WHERE topic = $1`;
+    queryValues.push(topic);
+  }
+  queryString += `  
+    GROUP BY articles.article_id
+    ORDER BY articles.${sortBy} ${orderBy};`;
+  return db.query(queryString, queryValues).then((articles) => {
+    return articles.rows;
+  });
 };
 const readArticle = (articleId) => {
   return db
@@ -112,6 +145,20 @@ const readEndpoints = () => {
     return JSON.parse(data);
   });
 };
+const readUser = (username) => {
+  return db
+    .query(
+      `SELECT * FROM users
+    WHERE username =$1`,
+      [username]
+    )
+    .then((data) => {
+      if (data.rows.length === 0) {
+        return Promise.reject({ status: 404 });
+      }
+      return data.rows[0];
+    });
+};
 const updateCommentVotes = (commentId, incVotes) => {
   return db
     .query(
@@ -140,5 +187,6 @@ module.exports = {
   readUsers,
   removeCommentById,
   readEndpoints,
+  readUser,
   updateCommentVotes,
 };
