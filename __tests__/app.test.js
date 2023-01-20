@@ -4,6 +4,7 @@ const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const db = require("../db/connection");
 const sorted = require("jest-sorted");
+const { expect } = require("@jest/globals");
 
 beforeEach(() => {
   return seed(data);
@@ -40,7 +41,6 @@ describe("GET /api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
-        console.log(body.articles);
         expect(body.articles).toBeInstanceOf(Array);
       });
   });
@@ -88,10 +88,18 @@ describe("GET /api/articles (queries)", () => {
       .get("/api/articles?topic=mitch")
       .expect(200)
       .then(({ body }) => {
-        body.articles.map((article) => {
+        body.articles.forEach((article) => {
           expect(article).toHaveProperty("topic");
           expect(article.topic).toBe("mitch");
         });
+      });
+  });
+  it("returns 200 and an empty array for a valid topic with no articles", () => {
+    return request(app)
+      .get("/api/articles?topic=ben")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles.length).toBe(0);
       });
   });
   it("returns 200 and sorts by any valid column", () => {

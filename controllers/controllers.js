@@ -15,7 +15,6 @@ const getTopics = (req, res) => {
       res.status(err.status).send({ msg: err.message });
     });
 };
-
 const getArticles = (req, res, next) => {
   const query = req.query;
   readArticles(query)
@@ -26,7 +25,6 @@ const getArticles = (req, res, next) => {
       next(err);
     });
 };
-
 const getArticle = (req, res, next) => {
   const articleId = req.params;
 
