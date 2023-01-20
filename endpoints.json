@@ -92,5 +92,15 @@
   "DELETE /api/comments/:comment_id": {
     "description": "removes a comment by its id",
     "exampleBody": {}
+  },
+  "GET /api/users/:username": {
+    "description": "returns a user object by its username",
+    "exampleBody": {
+      "user": {
+        "username": "butter_bridge",
+        "name": "jonny",
+        "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+      }
+    }
   }
 }

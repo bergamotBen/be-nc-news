@@ -9,6 +9,7 @@ const {
   updateVotes,
   removeCommentById,
   readEndpoints,
+  readUser,
 } = require("../models/models");
 
 const getTopics = (req, res) => {
@@ -100,6 +101,16 @@ const getEndpoints = (req, res) => {
     res.status(200).send({ endpoints: data });
   });
 };
+const getUser = (req, res, next) => {
+  username = req.params.username;
+  readUser(username)
+    .then((user) => {
+      res.status(200).send({ user });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
 module.exports = {
   getTopics,
   getArticles,
@@ -110,4 +121,5 @@ module.exports = {
   getUsers,
   deleteCommentById,
   getEndpoints,
+  getUser,
 };
