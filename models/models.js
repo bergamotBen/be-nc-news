@@ -112,6 +112,20 @@ const readEndpoints = () => {
     return JSON.parse(data);
   });
 };
+const readUser = (username) => {
+  return db
+    .query(
+      `SELECT * FROM users
+    WHERE username =$1`,
+      [username]
+    )
+    .then((data) => {
+      if (data.rows.length === 0) {
+        return Promise.reject({ status: 404 });
+      }
+      return data.rows[0];
+    });
+};
 module.exports = {
   readTopics,
   readArticles,
@@ -122,4 +136,5 @@ module.exports = {
   readUsers,
   removeCommentById,
   readEndpoints,
+  readUser,
 };

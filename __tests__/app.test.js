@@ -382,3 +382,29 @@ describe("DELETE /api/comments/:comment_id", () => {
       });
   });
 });
+
+describe("GET /api/users/:username", () => {
+  it("returns 200 and the requested user", () => {
+    return request(app)
+      .get("/api/users/lurker")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.user).toBeInstanceOf(Object);
+        expect(body.user).toHaveProperty("username");
+        expect(body.user).toHaveProperty("avatar_url");
+        expect(body.user).toHaveProperty("name");
+
+        expect(body.user.username).toBe("lurker");
+        expect(typeof body.user.avatar_url).toBe("string");
+        expect(typeof body.user.name).toBe("string");
+      });
+  });
+  it("returns 404 when given a valid but nonexistent username", () => {
+    return request(app)
+      .get("/api/users/123")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.message).toBe("Not found");
+      });
+  });
+});
