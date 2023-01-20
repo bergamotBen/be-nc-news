@@ -1,28 +1,11 @@
 const express = require("express");
-const {
-  getTopics,
-  getArticles,
-  getArticle,
-  postComment,
-  getCommentsByArticleId,
-  patchVotes,
-  getUsers,
-  deleteCommentById,
-  getEndpoints,
-} = require("./controllers/controllers");
+
+const api = require("./routes/api");
+
 const app = express();
 
 app.use(express.json());
-
-app.get("/api/topics", getTopics);
-app.get("/api/articles", getArticles);
-app.get("/api/articles/:article_id", getArticle);
-app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
-app.post("/api/articles/:article_id/comments", postComment);
-app.patch("/api/articles/:article_id", patchVotes);
-app.get("/api/users", getUsers);
-app.delete("/api/comments/:comment_id", deleteCommentById);
-app.get("/api", getEndpoints);
+app.use("/api", api);
 
 app.use((err, req, res, next) => {
   if (err.code === "23502") {
