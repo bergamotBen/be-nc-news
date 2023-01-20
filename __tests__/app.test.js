@@ -4,6 +4,7 @@ const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const db = require("../db/connection");
 const sorted = require("jest-sorted");
+const { expect } = require("@jest/globals");
 
 beforeEach(() => {
   return seed(data);
@@ -77,6 +78,60 @@ describe("GET /api/articles", () => {
       .expect(200)
       .then(({ body }) => {
         expect(body.articles).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+});
+
+describe("GET /api/articles (queries)", () => {
+  it("returns 200 and articles with a topic of 'mitch'", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body }) => {
+        body.articles.forEach((article) => {
+          expect(article).toHaveProperty("topic");
+          expect(article.topic).toBe("mitch");
+        });
+      });
+  });
+  it("returns 200 and an empty array for a valid topic with no articles", () => {
+    return request(app)
+      .get("/api/articles?topic=ben")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles.length).toBe(0);
+      });
+  });
+  it("returns 200 and sorts by any valid column", () => {
+    return request(app)
+      .get("/api/articles?sort_by=author")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy("author", { descending: true });
+      });
+  });
+  it("returns 400 and rejects an invalid column", () => {
+    return request(app)
+      .get("/api/articles?sort_by=articles")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toBe("invalid type");
+      });
+  });
+  it("returns results by created_at ASC", () => {
+    return request(app)
+      .get("/api/articles?order=ASC")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy("created_at", { ascending: true });
+      });
+  });
+  it("returns 400 and rejects an invalid order", () => {
+    return request(app)
+      .get("/api/articles?order=order")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toBe("invalid type");
       });
   });
 });

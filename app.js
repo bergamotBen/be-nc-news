@@ -34,6 +34,12 @@ app.use((err, req, res, next) => {
   if (err.code === "23503") {
     return res.status(404).send({ message: "not found" });
   }
+  if (err.code === "42703") {
+    return res.status(400).send({ message: "invalid type" });
+  }
+  if (err.code === "42601") {
+    return res.status(400).send({ message: "invalid type" });
+  }
   next(err);
 });
 
