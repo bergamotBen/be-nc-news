@@ -1,3 +1,4 @@
+const { response } = require("../app");
 const {
   readTopics,
   readArticles,
@@ -6,6 +7,7 @@ const {
   readCommentsByArticleId,
   readUsers,
   updateVotes,
+  removeCommentById,
 } = require("../models/models");
 
 const getTopics = (req, res) => {
@@ -81,6 +83,16 @@ const getUsers = (req, res) => {
     res.status(200).send({ users });
   });
 };
+const deleteCommentById = (req, res, next) => {
+  const commentId = req.params.comment_id;
+  removeCommentById(commentId)
+    .then(() => {
+      res.status(204).send();
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
 module.exports = {
   getTopics,
   getArticles,
@@ -89,4 +101,5 @@ module.exports = {
   getCommentsByArticleId,
   patchVotes,
   getUsers,
+  deleteCommentById,
 };

@@ -91,7 +91,21 @@ const readUsers = () => {
       return data.rows;
     });
 };
-
+const removeCommentById = (commentId) => {
+  return db
+    .query(
+      `DELETE FROM comments
+    WHERE comment_id =$1
+    RETURNING *`,
+      [commentId]
+    )
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      }
+      return { article: rows };
+    });
+};
 module.exports = {
   readTopics,
   readArticles,
@@ -100,4 +114,5 @@ module.exports = {
   readCommentsByArticleId,
   updateVotes,
   readUsers,
+  removeCommentById,
 };
