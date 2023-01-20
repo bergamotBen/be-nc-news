@@ -9,6 +9,7 @@ const {
   getUsers,
   deleteCommentById,
   getEndpoints,
+  patchCommentVotes,
 } = require("./controllers/controllers");
 const app = express();
 
@@ -23,6 +24,7 @@ app.patch("/api/articles/:article_id", patchVotes);
 app.get("/api/users", getUsers);
 app.delete("/api/comments/:comment_id", deleteCommentById);
 app.get("/api", getEndpoints);
+app.patch("/api/comments/:comment_id", patchCommentVotes);
 
 app.use((err, req, res, next) => {
   if (err.code === "23502") {
