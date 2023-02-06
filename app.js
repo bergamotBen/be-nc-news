@@ -1,3 +1,4 @@
+const cors = require("cors");
 const express = require("express");
 const {
   getTopics,
@@ -12,7 +13,10 @@ const {
   patchCommentVotes,
   getUser,
 } = require("./controllers/controllers");
+
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 
