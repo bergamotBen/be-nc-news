@@ -47,13 +47,13 @@ const getCommentsByArticleId = (req, res, next) => {
   const articleId = req.params;
   Promise.all([
     readCommentsByArticleId(articleId.article_id),
-    // readArticle(articleId.article_id),
+    readArticle(articleId.article_id),
   ])
     .then((comments) => {
       if (comments[1].article === undefined) {
         return Promise.reject({ status: 404 });
       }
-      res.status(200).send({ comments: comments[0] });
+      res.status(200).send({ comments });
     })
     .catch((err) => {
       next(err);
