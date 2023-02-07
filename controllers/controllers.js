@@ -47,7 +47,7 @@ const getCommentsByArticleId = (req, res, next) => {
   const articleId = req.params;
   Promise.all([
     readCommentsByArticleId(articleId.article_id),
-    readArticle(articleId.article_id),
+    // readArticle(articleId.article_id),
   ])
     .then((comments) => {
       if (comments[1].article === undefined) {
