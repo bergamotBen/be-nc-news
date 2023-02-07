@@ -53,7 +53,7 @@ const getCommentsByArticleId = (req, res, next) => {
       if (comments[1].article === undefined) {
         return Promise.reject({ status: 404 });
       }
-      res.status(200).send({ comments });
+      res.status(200).send({ comments: comments[0] });
     })
     .catch((err) => {
       next(err);

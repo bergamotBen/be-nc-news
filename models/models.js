@@ -76,7 +76,7 @@ const readCommentsByArticleId = (article_id) => {
     .query(
       `SELECT * FROM comments
       WHERE article_id=$1`,
-      [article_id.article_id]
+      [article_id]
     )
     .then((comments) => {
       return comments.rows;
