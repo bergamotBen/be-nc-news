@@ -27,7 +27,6 @@ const readArticles = (query) => {
     : validSorts.filter((sort) => {
         return sort === query.sort_by;
       });
-
   const orderArray = validOrders.find((validOrder) => {
     return validOrder === order.toUpperCase();
   });
@@ -38,7 +37,7 @@ const readArticles = (query) => {
     ? orderArray
     : "ERROR";
   const queryValues = [];
-  let queryString = `SELECT articles.article_id, articles.article_img_url, articles.author, articles.created_at, articles.title, articles.votes, articles.topic, COUNT(comments.article_id) AS comment_count
+  let queryString = `SELECT articles.article_id, articles.article_img_url, articles.author, articles.created_at, articles.title, articles.votes, articles.topic, COUNT(comments.article_id)::int AS comment_count
   FROM articles       
   LEFT JOIN comments on comments.article_id = articles.article_id`;
   if (topic) {
@@ -46,17 +45,26 @@ const readArticles = (query) => {
       WHERE topic = $1`;
     queryValues.push(topic);
   }
-  queryString += `  
+  if (sortBy[0] === "comment_count") {
+    queryString += `  
+    GROUP BY articles.article_id, articles.article_img_url, articles.author, articles.created_at, articles.title, articles.votes, articles.topic
+    ORDER BY ${sortBy} ${orderBy};`;
+    return db.query(queryString, queryValues).then((articles) => {
+      return articles.rows;
+    });
+  } else {
+    queryString += `  
     GROUP BY articles.article_id
-    ORDER BY articles.${sortBy} ${orderBy};`;
-  return db.query(queryString, queryValues).then((articles) => {
-    return articles.rows;
-  });
+    ORDER BY ${sortBy} ${orderBy};`;
+    return db.query(queryString, queryValues).then((articles) => {
+      return articles.rows;
+    });
+  }
 };
 const readArticle = (articleId) => {
   return db
     .query(
-      `SELECT articles.article_id, articles.article_img_url, articles.author, articles.created_at, articles.title, articles.votes, articles.topic, articles.body, COUNT(comments.article_id) AS comment_count
+      `SELECT articles.article_id, articles.article_img_url, articles.author, articles.created_at, articles.title, articles.votes, articles.topic, articles.body, COUNT(comments.article_id)::int AS comment_count
       FROM articles
       LEFT JOIN comments on comments.article_id = articles.article_id
       WHERE articles.article_id=$1
