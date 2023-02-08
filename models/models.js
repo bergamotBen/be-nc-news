@@ -14,6 +14,7 @@ const readArticles = (query) => {
     "article_id",
     "created_at",
     "votes",
+    "comment_count",
   ];
   const validOrders = ["ASC", "DESC"];
 
