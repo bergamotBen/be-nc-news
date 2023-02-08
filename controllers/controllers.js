@@ -37,6 +37,9 @@ const getArticle = (req, res, next) => {
 
   readArticle(articleId.article_id)
     .then((article) => {
+      if (article.article === undefined) {
+        return next({ status: 404 });
+      }
       res.status(200).send(article);
     })
     .catch((err) => {
