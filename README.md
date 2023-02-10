@@ -27,7 +27,7 @@ There are a few things you'll need to do to get the repo up and running for your
 Clone the repo by pasting
 
 ```
-git clone https://github.com/bergamotBen/news.git
+git clone https://github.com/bergamotBen/be-nc-news.git
 ```
 
 into the terminal. Once you've cloned the repo, head to the 'Creating the environment variables' section to created local versions of gitignored files.
