@@ -1,6 +1,6 @@
 ## 📖 README contents
 
-### 🔗 Find the hosted version here: [nc.news on Render](https://news-7d6f.onrender.com).
+### 🔗 Find the hosted version here: [nc.news on Render](https://news-7d6f.onrender.com/api).
 
 ### 📋 Summary of the project.
 
