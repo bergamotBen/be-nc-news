@@ -1,4 +1,4 @@
-const { response } = require("../app");
+// const { response } = require("../app");
 const {
   readTopics,
   readArticles,
