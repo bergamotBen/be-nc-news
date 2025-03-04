@@ -10,6 +10,8 @@ const config =
     ? {
         connectionString: process.env.DATABASE_URL,
         max: 2,
+        idleTimeoutMillis: 0,
+        connectionTimeoutMillis: 0,
       }
     : {};
 
