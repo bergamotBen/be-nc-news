@@ -13,13 +13,16 @@ const {
   updateCommentVotes,
 } = require("../models/models");
 
-const getTopics = (req, res) => {
+const getTopics = (req, res, next) => {
   readTopics()
     .then((rows) => {
       res.status(200).send({ topics: rows });
     })
     .catch((err) => {
-      res.status(err.status).send({ msg: err.message });
+      console.error("Unhandled error:", err); // Log the full error in production
+      next(err); // Pass it to Express error middleware
+      //res.status(err.status).send({ msg: err.message });
+
     });
 };
 const getArticles = (req, res, next) => {
