@@ -15,17 +15,18 @@ async function setupDatabase() {
     console.log("Setting up the database...");
 
     // Run the DROP DATABASE command without a transaction
-    await pool.query('DROP DATABASE IF EXISTS nc_news_test;');
+    //await pool.query('DROP DATABASE IF EXISTS nc_news_test;');
 
     // Create the database (you may need to connect to a default database like postgres to execute this)
-    await pool.query('CREATE DATABASE nc_news_test;');
+    await pool.query('CREATE DATABASE nc_news;');
 
     // After creating the database, reconnect to the new database and run the setup SQL
+    /*
     const newPool = new Pool({
       connectionString: process.env.DATABASE_URL.replace('nc_news', 'nc_news_test'), // Change the DB name to the new one
       ssl: { rejectUnauthorized: false },
     });
-
+    */
     // Run the setup.sql content (this assumes it has table creation, etc.)
     await newPool.query(setupSql);
 
